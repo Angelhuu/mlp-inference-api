@@ -10,10 +10,15 @@ app = FastAPI(
     description="API d'entraînement et de prédiction via un réseau de neurones simple avec Numba (JSON via POST)."
 )
 
+# Instance globale du modèle
 model: Optional[MLP] = None
+
+# --- Schémas de requête et réponse ---
 
 class TrainRequest(BaseModel):
     architecture: List[int]
+    X: List[List[float]]
+    y: List[List[float]]
     alpha: float = 0.1
     iterations: int = 10000
 
@@ -28,6 +33,8 @@ class PredictRequest(BaseModel):
 class PredictResponse(BaseModel):
     outputs: List[float]
 
+# --- Routes API ---
+
 @app.get("/")
 def root():
     return {"message": "Bienvenue sur l'API Numba‑MLP. Accédez à /docs pour tester."}
@@ -39,13 +46,18 @@ def health():
 @app.post("/train", response_model=TrainResponse)
 def train_model(req: TrainRequest):
     global model
-    X = [[0, 0], [0, 1], [1, 0], [1, 1]]
-    y = [[0], [1], [1], [0]]
+
+    X_np = np.array(req.X, dtype=np.float64)
+    y_np = np.array(req.y, dtype=np.float64)
 
     model = MLP(req.architecture)
-    model.train(np.array(X, dtype=np.float64), np.array(y, dtype=np.float64), alpha=req.alpha, nb_iter=req.iterations)
+    model.train(X_np, y_np, alpha=req.alpha, nb_iter=req.iterations)
 
-    return TrainResponse(status="trained", iterations=req.iterations, architecture=req.architecture)
+    return TrainResponse(
+        status="trained",
+        iterations=req.iterations,
+        architecture=req.architecture
+    )
 
 @app.post("/predict", response_model=PredictResponse)
 def predict(req: PredictRequest):
