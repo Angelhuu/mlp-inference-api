@@ -4,3 +4,4 @@ fastapi
 scikit-learn
 uvicorn
 pydantic
+gunicorn
