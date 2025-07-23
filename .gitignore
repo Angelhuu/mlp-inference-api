@@ -1,0 +1,11 @@
+# Exclure l'environnement virtuel
+venv/
+
+# Exclure les fichiers Terraform générés
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# Exclure les gros fichiers binaires
+*.exe
+*.dll
