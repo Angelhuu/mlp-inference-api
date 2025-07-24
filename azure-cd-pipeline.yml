@@ -1,11 +1,9 @@
-# azure-cd-pipeline.yml
-
 trigger: none
 
 resources:
   pipelines:
-    - pipeline: ci_pipeline                # nom interne utilisé dans ce fichier
-      source: CI_Test                     # nom exact de la pipeline CI (sans guillemets si pas d’espace)
+    - pipeline: ci_pipeline
+      source: CI_Test    # Remplace par le nom exact affiché dans Azure
       trigger:
         branches:
           include:
@@ -24,7 +22,7 @@ stages:
                   inputs:
                     buildType: 'specific'
                     project: $(System.TeamProject)
-                    pipeline: $(resources.pipeline.ci_pipeline.pipelineID)
+                    pipeline: ci_pipeline
                     artifactName: 'drop'
                     targetPath: '$(Pipeline.Workspace)/drop'
 
@@ -33,4 +31,3 @@ stages:
                     azureSubscription: 'AzureConnection'
                     appName: 'mlp-inference-api'
                     package: '$(Pipeline.Workspace)/drop'
-                    startUpCommand: 'bash startup.sh'

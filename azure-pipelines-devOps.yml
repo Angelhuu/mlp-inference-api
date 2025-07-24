@@ -1,5 +1,3 @@
-# azure-pipelines-devOps.yml
-
 trigger:
   - master
 
@@ -23,14 +21,12 @@ steps:
 
   - script: |
       mkdir -p drop
-      cp api.py requirements.txt startup.sh drop/
-      echo "Fichiers copiés :"
-      ls -l drop
-    displayName: 'Préparer les fichiers à déployer'
+      cp api.py requirements.txt startup.sh mlp.py host.json drop/
+    displayName: "Préparer les fichiers à déployer"
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathToPublish: 'drop'
       artifactName: 'drop'
       publishLocation: 'Container'
-    displayName: 'Publier l’artefact pour le CD'
+    displayName: "Publier l’artefact pour le CD"
