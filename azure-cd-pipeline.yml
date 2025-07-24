@@ -4,8 +4,8 @@ trigger: none
 
 resources:
   pipelines:
-    - pipeline: ci_pipeline              # identifiant interne
-      source: CI - Test                  # 🔁 NOM EXACT de ta pipeline CI dans l’interface DevOps
+    - pipeline: ci_pipeline              
+      source: CI_Test                  
       trigger:
         branches:
           include:
