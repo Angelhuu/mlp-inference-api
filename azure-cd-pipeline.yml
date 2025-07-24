@@ -1,9 +1,11 @@
+# azure-pipelines-cd.yml
+
 trigger: none
 
 resources:
   pipelines:
-    - pipeline: ci_pipeline           # alias qu’on va utiliser dans le CD
-      source: CI_Test                 # nom exact de ta pipeline CI
+    - pipeline: ci_pipeline
+      source: CI_Test                    # ⚠️ NOM EXACT du pipeline CI visible sur Azure DevOps
       trigger:
         branches:
           include:
@@ -11,8 +13,10 @@ resources:
 
 stages:
   - stage: Deploy
+    displayName: 'Déploiement vers Azure App Service'
     jobs:
       - deployment: DeployToAppService
+        displayName: 'Déployer sur App Service'
         environment: 'production'
         strategy:
           runOnce:
@@ -20,12 +24,14 @@ stages:
               steps:
                 - task: DownloadPipelineArtifact@2
                   inputs:
-                    buildType: 'current'
-                    artifact: 'drop'
+                    buildType: 'specific'
+                    project: $(System.TeamProject)
+                    pipeline: CI_Test
+                    artifactName: 'drop'
                     targetPath: '$(Pipeline.Workspace)/drop'
 
                 - task: AzureWebApp@1
                   inputs:
-                    azureSubscription: 'AzureConnection'
-                    appName: 'mlp-inference-api'
+                    azureSubscription: 'AzureConnection'         # nom du service connection Azure
+                    appName: 'mlp-inference-api'                 # nom de ton App Service
                     package: '$(Pipeline.Workspace)/drop'
