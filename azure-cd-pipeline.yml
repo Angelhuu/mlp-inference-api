@@ -1,14 +1,14 @@
 # azure-cd-pipeline.yml
-trigger: none  # Ce pipeline est déclenché par CI, pas directement
+trigger: none
 
 resources:
   pipelines:
     - pipeline: ci_pipeline
-      source: azure-pipelines-devOps
+      source: Angelhuu.mlp-inference-api 
       trigger:
         branches:
           include:
-            - main
+            - master
 
 stages:
   - stage: Deploy
