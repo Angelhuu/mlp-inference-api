@@ -22,7 +22,7 @@ steps:
 
   - script: |
       mkdir -p drop
-      cp app.py drop/
+      cp api.py drop/
       cp requirements.txt drop/
     displayName: 'Préparer les fichiers à déployer'
 

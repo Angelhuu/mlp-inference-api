@@ -3,8 +3,8 @@ trigger: none
 
 resources:
   pipelines:
-    - pipeline: ci_pipeline
-      source: Angelhuu.mlp-inference-api
+    - pipeline: ci_pipeline          # Nom local
+      source: Angelhuu.mlp-inference-api      # Nom exact de la pipeline CI (visible dans DevOps)
       trigger:
         branches:
           include:
@@ -22,16 +22,14 @@ stages:
                 - task: DownloadPipelineArtifact@2
                   inputs:
                     buildType: 'specific'
-                    project: $(System.TeamProject)
-                    pipeline: ci_pipeline
-                    runVersion: 'latest'
+                    project: '$(System.TeamProject)'
+                    pipeline: 'mlp-inference-api'
+                    buildVersionToDownload: 'latest'
                     artifactName: 'drop'
                     targetPath: '$(Pipeline.Workspace)/drop'
-                  displayName: 'Télécharger l’artefact depuis la CI'
 
                 - task: AzureWebApp@1
                   inputs:
                     azureSubscription: 'AzureConnection'
                     appName: 'mlp-inference-api'
                     package: '$(Pipeline.Workspace)/drop'
-                  displayName: 'Déployer sur Azure App Service'
