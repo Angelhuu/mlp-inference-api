@@ -29,6 +29,10 @@ steps:
       cp mlp.py drop/
     displayName: 'Préparer les fichiers à déployer'
 
+  - script: chmod +x drop/startup.sh
+    displayName: 'Rendre startup.sh exécutable'
+
+
   - task: PublishBuildArtifacts@1
     inputs:
       pathToPublish: 'drop'
