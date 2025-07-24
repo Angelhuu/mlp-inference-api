@@ -1,40 +1,36 @@
 # azure-pipelines-devOps.yml
 
 trigger:
-  branches:
-    include:
-      - master
+  - master
 
 pool:
   vmImage: 'ubuntu-latest'
 
-jobs:
-  - job: BuildAndTest
-    displayName: 'CI - Build, Test, and Publish'
-    steps:
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.10'
+      addToPath: true
 
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: '3.10'
+  - script: |
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+    displayName: 'Install dependencies'
 
-      - script: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-        displayName: 'Install dependencies'
+  - script: |
+      pytest tests/
+    displayName: 'Run tests'
 
-      - script: |
-          echo "Running tests..."
-          pytest tests/
-        displayName: 'Run tests'
+  - script: |
+      mkdir -p drop
+      cp api.py drop/
+      cp requirements.txt drop/
+      cp startup.sh drop/
+    displayName: 'Préparer les fichiers à déployer'
 
-      - script: |
-          mkdir -p drop
-          cp api.py requirements.txt startup.sh mlp.py drop/
-        displayName: 'Préparer les fichiers à déployer'
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: 'drop'
-          ArtifactName: 'drop'
-          publishLocation: 'Container'
-        displayName: 'Publier l’artefact pour le CD'
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: 'drop'
+      artifactName: 'drop'
+      publishLocation: 'Container'
+    displayName: 'Publier l’artefact pour le CD'

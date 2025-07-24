@@ -4,8 +4,8 @@ trigger: none
 
 resources:
   pipelines:
-    - pipeline: ci_pipeline
-      source: CI - Test     # ✅ Doit correspondre exactement au nom visible dans Azure
+    - pipeline: ci_pipeline                # nom interne utilisé dans ce fichier
+      source: CI_Test                     # nom exact de la pipeline CI (sans guillemets si pas d’espace)
       trigger:
         branches:
           include:
@@ -13,7 +13,6 @@ resources:
 
 stages:
   - stage: Deploy
-    displayName: 'Déploiement vers Azure App Service'
     jobs:
       - deployment: DeployToAppService
         environment: 'production'
@@ -25,18 +24,13 @@ stages:
                   inputs:
                     buildType: 'specific'
                     project: $(System.TeamProject)
-                    pipeline: ci_pipeline
+                    pipeline: $(resources.pipeline.ci_pipeline.pipelineID)
                     artifactName: 'drop'
                     targetPath: '$(Pipeline.Workspace)/drop'
-
-                - script: |
-                    echo "Contenu de drop/"
-                    ls -la $(Pipeline.Workspace)/drop
-                  displayName: 'Lister les fichiers téléchargés'
 
                 - task: AzureWebApp@1
                   inputs:
                     azureSubscription: 'AzureConnection'
                     appName: 'mlp-inference-api'
                     package: '$(Pipeline.Workspace)/drop'
-                    startupCommand: 'startup.sh'
+                    startUpCommand: 'bash startup.sh'
