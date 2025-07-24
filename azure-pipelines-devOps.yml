@@ -20,14 +20,12 @@ steps:
       pytest tests/
     displayName: 'Run tests'
 
-  # Étape 1 : créer un dossier drop et y copier ce qu'on veut déployer
   - script: |
       mkdir -p drop
       cp app.py drop/
       cp requirements.txt drop/
     displayName: 'Préparer les fichiers à déployer'
 
-  # Étape 2 : publier ce dossier comme artefact nommé 'drop'
   - task: PublishBuildArtifacts@1
     inputs:
       pathToPublish: 'drop'

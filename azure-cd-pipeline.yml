@@ -1,5 +1,4 @@
 # azure-cd-pipeline.yml
-
 trigger: none
 
 resources:
@@ -22,12 +21,17 @@ stages:
               steps:
                 - task: DownloadPipelineArtifact@2
                   inputs:
-                    buildType: 'current'
+                    buildType: 'specific'
+                    project: $(System.TeamProject)
+                    pipeline: ci_pipeline
+                    runVersion: 'latest'
                     artifactName: 'drop'
                     targetPath: '$(Pipeline.Workspace)/drop'
+                  displayName: 'Télécharger l’artefact depuis la CI'
 
                 - task: AzureWebApp@1
                   inputs:
                     azureSubscription: 'AzureConnection'
                     appName: 'mlp-inference-api'
                     package: '$(Pipeline.Workspace)/drop'
+                  displayName: 'Déployer sur Azure App Service'
