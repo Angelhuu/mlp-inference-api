@@ -24,7 +24,6 @@ steps:
   - script: |
       mkdir -p drop
       cp app.py drop/
-      cp -r ml_models/ drop/              # adapte selon ton projet
       cp requirements.txt drop/
     displayName: 'Préparer les fichiers à déployer'
 
