@@ -1,11 +1,9 @@
-# azure-cd-pipeline.yml
-
 trigger: none
 
 resources:
   pipelines:
-    - pipeline: ci_pipeline              
-      source: CI_Test                  
+    - pipeline: ci_pipeline             # nom local (utilisé dans le reste du script)
+      source: CI_Test                   # nom EXACT de la pipeline CI comme vu dans l'interface
       trigger:
         branches:
           include:
@@ -24,7 +22,7 @@ stages:
                   inputs:
                     buildType: 'specific'
                     project: $(System.TeamProject)
-                    pipeline: ci_pipeline
+                    pipeline: ci_pipeline             
                     artifactName: 'drop'
                     targetPath: '$(Pipeline.Workspace)/drop'
 
