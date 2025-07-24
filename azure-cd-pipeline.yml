@@ -3,7 +3,7 @@ trigger: none
 resources:
   pipelines:
     - pipeline: ci_pipeline
-      source: CI_Test    # Remplace par le nom exact affiché dans Azure
+      source: CI_Test
       trigger:
         branches:
           include:
@@ -20,9 +20,9 @@ stages:
               steps:
                 - task: DownloadPipelineArtifact@2
                   inputs:
-                    buildType: 'specific'
+                    buildType: 'latestFromPipeline'
                     project: $(System.TeamProject)
-                    pipeline: ci_pipeline
+                    pipeline: CI_Test
                     artifactName: 'drop'
                     targetPath: '$(Pipeline.Workspace)/drop'
 
