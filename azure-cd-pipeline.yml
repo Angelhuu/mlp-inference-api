@@ -34,4 +34,5 @@ stages:
                   inputs:
                     azureSubscription: 'AzureConnection'         # nom du service connection Azure
                     appName: 'mlp-inference-api'                 # nom de ton App Service
-                    package: '$(Pipeline.Workspace)/drop'
+                    package: '$(Pipeline.Workspace)/drop/drop.zip'
+

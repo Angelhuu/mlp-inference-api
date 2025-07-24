@@ -29,9 +29,14 @@ steps:
       cp mlp.py drop/
     displayName: 'Préparer les fichiers à déployer'
 
+  - script: |
+      cd drop
+      zip -r ../drop.zip .
+    displayName: 'Créer une archive ZIP'
+
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: 'drop'
+      pathToPublish: 'drop.zip'
       artifactName: 'drop'
       publishLocation: 'Container'
-    displayName: 'Publier l’artefact pour le CD'
+    displayName: 'Publier l’artefact ZIP pour le CD'
