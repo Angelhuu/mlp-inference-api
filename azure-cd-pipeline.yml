@@ -1,10 +1,11 @@
 # azure-cd-pipeline.yml
+
 trigger: none
 
 resources:
   pipelines:
     - pipeline: ci_pipeline
-      source: Angelhuu.mlp-inference-api 
+      source: Angelhuu.mlp-inference-api
       trigger:
         branches:
           include:
@@ -19,11 +20,14 @@ stages:
           runOnce:
             deploy:
               steps:
-                - download: ci_pipeline
-                  artifact: drop
+                - task: DownloadPipelineArtifact@2
+                  inputs:
+                    buildType: 'current'
+                    artifactName: 'drop'
+                    targetPath: '$(Pipeline.Workspace)/drop'
 
                 - task: AzureWebApp@1
                   inputs:
                     azureSubscription: 'AzureConnection'
                     appName: 'mlp-inference-api'
-                    package: $(Pipeline.Workspace)/drop
+                    package: '$(Pipeline.Workspace)/drop'
