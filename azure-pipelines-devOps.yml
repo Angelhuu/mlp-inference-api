@@ -23,9 +23,9 @@ steps:
 
   - script: |
       mkdir -p drop
-      cp api.py drop/
-      cp requirements.txt drop/
-      cp startup.sh drop/
+      cp api.py requirements.txt startup.sh drop/
+      echo "Fichiers copiés :"
+      ls -l drop
     displayName: 'Préparer les fichiers à déployer'
 
   - task: PublishBuildArtifacts@1
