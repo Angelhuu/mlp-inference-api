@@ -1,4 +1,4 @@
-# azure-pipelines-ci.yml
+# azure-pipelines-devOps.yml
 
 trigger:
   - master
@@ -24,18 +24,16 @@ steps:
   - script: |
       mkdir -p drop
       cp api.py drop/
+      cp mlp.py drop/
       cp requirements.txt drop/
       cp startup.sh drop/
-      cp mlp.py drop/
-    displayName: 'Préparer les fichiers à déployer'
-
-  - script: chmod +x drop/startup.sh
-    displayName: 'Rendre startup.sh exécutable'
-
+      chmod +x drop/startup.sh
+      zip -r drop.zip drop/
+    displayName: 'Préparer et zipper le dossier drop'
 
   - task: PublishBuildArtifacts@1
     inputs:
-      pathToPublish: 'drop'
+      pathToPublish: 'drop.zip'          # publie le zip
       artifactName: 'drop'
       publishLocation: 'Container'
-    displayName: 'Publier l’artefact pour le CD'
+    displayName: 'Publier le zip pour le CD'

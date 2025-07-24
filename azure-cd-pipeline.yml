@@ -1,11 +1,11 @@
-# azure-pipelines-cd.yml
+# azure-cd-pipeline.yml
 
 trigger: none
 
 resources:
   pipelines:
-    - pipeline: ci_pipeline
-      source: CI_Test                    # ⚠️ NOM EXACT du pipeline CI visible sur Azure DevOps
+    - pipeline: ci_pipeline              # identifiant interne
+      source: CI - Test                  # 🔁 NOM EXACT de ta pipeline CI dans l’interface DevOps
       trigger:
         branches:
           include:
@@ -13,10 +13,8 @@ resources:
 
 stages:
   - stage: Deploy
-    displayName: 'Déploiement vers Azure App Service'
     jobs:
       - deployment: DeployToAppService
-        displayName: 'Déployer sur App Service'
         environment: 'production'
         strategy:
           runOnce:
@@ -26,12 +24,12 @@ stages:
                   inputs:
                     buildType: 'specific'
                     project: $(System.TeamProject)
-                    pipeline: CI_Test
+                    pipeline: ci_pipeline
                     artifactName: 'drop'
                     targetPath: '$(Pipeline.Workspace)/drop'
 
                 - task: AzureWebApp@1
                   inputs:
-                    azureSubscription: 'AzureConnection'         # nom du service connection Azure
-                    appName: 'mlp-inference-api'                 # nom de ton App Service
-                    package: '$(Pipeline.Workspace)/drop'
+                    azureSubscription: 'AzureConnection'
+                    appName: 'mlp-inference-api'
+                    package: '$(Pipeline.Workspace)/drop/drop.zip'
