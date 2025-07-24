@@ -1,10 +1,11 @@
 # azure-cd-pipeline.yml
+
 trigger: none
 
 resources:
   pipelines:
-    - pipeline: ci_pipeline          # Nom local
-      source: Angelhuu.mlp-inference-api      # Nom exact de la pipeline CI (visible dans DevOps)
+    - pipeline: ci_pipeline                # nom interne qu’on donne à cette ressource
+      source: CI - Test                    # NOM EXACT de ta pipeline CI (affiché dans l’interface Azure)
       trigger:
         branches:
           include:
@@ -22,9 +23,8 @@ stages:
                 - task: DownloadPipelineArtifact@2
                   inputs:
                     buildType: 'specific'
-                    project: '$(System.TeamProject)'
-                    pipeline: 'mlp-inference-api'
-                    buildVersionToDownload: 'latest'
+                    project: $(System.TeamProject)
+                    pipeline: ci_pipeline
                     artifactName: 'drop'
                     targetPath: '$(Pipeline.Workspace)/drop'
 

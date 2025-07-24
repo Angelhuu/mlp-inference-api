@@ -1,4 +1,5 @@
 # azure-pipelines-devOps.yml
+
 trigger:
   - master
 
@@ -22,7 +23,7 @@ steps:
 
   - script: |
       mkdir -p drop
-      cp api.py drop/
+      cp api.py drop/                       # ✅ remplace app.py par api.py
       cp requirements.txt drop/
     displayName: 'Préparer les fichiers à déployer'
 
