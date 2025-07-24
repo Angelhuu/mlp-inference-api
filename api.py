@@ -72,3 +72,7 @@ def predict(req: PredictRequest):
     outputs = model.predict(inputs_np)
 
     return PredictResponse(outputs=outputs.tolist())
+
+@app.get("/ping")
+def ping():
+    return {"message": "pong"}

@@ -1,0 +1,29 @@
+# azure-cd-pipeline.yml
+trigger: none  # Ce pipeline est déclenché par CI, pas directement
+
+resources:
+  pipelines:
+    - pipeline: ci_pipeline
+      source: azure-pipelines-devOps
+      trigger:
+        branches:
+          include:
+            - main
+
+stages:
+  - stage: Deploy
+    jobs:
+      - deployment: DeployToAppService
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: ci_pipeline
+                  artifact: drop
+
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: 'AzureConnection'
+                    appName: 'mlp-inference-api'
+                    package: $(Pipeline.Workspace)/drop

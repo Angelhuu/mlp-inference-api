@@ -1,4 +1,4 @@
-# azure-pipelines.yml
+# azure-pipelines-devOps.yml
 trigger:
   - main
 
@@ -19,3 +19,10 @@ steps:
   - script: |
       pytest tests/
     displayName: 'Run tests'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: '.'                
+      artifactName: 'drop'               
+      publishLocation: 'Container'
+    displayName: 'Publish source as artifact'
