@@ -1,20 +1,31 @@
-trigger:
-  - master
+# azure-cd-pipeline.yml
+name: CD - Deploy MLP Inference API
+trigger: none
 
-pool:
-  vmImage: ubuntu-latest
+resources:
+  pipelines:
+    - pipeline: ci_pipeline  # Nom local
+      source: Angelhuu.mlp-inference-api  # Nom exact de ta pipeline CI dans Azure DevOps
+      trigger:
+        branches:
+          include:
+            - master
 
-steps:
-- task: UsePythonVersion@0
-  inputs:
-    versionSpec: '3.10'
-    addToPath: true
+stages:
+  - stage: Deploy
+    displayName: 'Déploiement Azure App Service'
+    jobs:
+      - deployment: DeployToAppService
+        environment: 'production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: ci_pipeline
+                  artifact: drop
 
-- script: |
-    python -m pip install --upgrade pip
-    pip install -r requirements.txt
-  displayName: 'Install dependencies'
-
-- script: |
-    pytest tests/
-  displayName: 'Run tests'
+                - task: AzureWebApp@1
+                  inputs:
+                    azureSubscription: 'AzureConnection'
+                    appName: 'mlp-inference-api'
+                    package: '$(Pipeline.Workspace)/drop'
