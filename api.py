@@ -73,6 +73,3 @@ def predict(req: PredictRequest):
 
     return PredictResponse(outputs=outputs.tolist())
 
-@app.get("/ping")
-def ping():
-    return {"message": "pong"}
